@@ -31,23 +31,31 @@ void dig() {
 }
 //updateled
 
+void updateLed() {
+  if (ledOn) {
+    digitalWrite(ledPin,HIGH);
+    Serial.println("Led is on");
+  }
+  else {
+    digitalWrite(ledPin,LOW);
+    Serial.println("Led is off");
+  }}
+
 void setup() {
   Serial.begin(115200);
-  ServoLeft1.attach(servoLeft1);
-  ServoLeft2.attach(servoLeft2;
-  ServoRight1.attach(servoRight1);
-  ServoRight2.attach(servoRight2);
-
-  // Startposisjon for servoene
-  ServoLeft1.write(150);
-  ServoLeft2.write(150);
-  ServoRight1(30);
-  ServoRight2.write(30);
+  pinMode(ledPin,OUTPUT);
+  pinMode(controllPin, INPUT_PULLDOWN);
+  pinMode(servoControll, INPUT_PULLDOWN);
+  pinMode(servoLeft1, OUTPUT);
+  pinMode(servoLeft2, OUTPUT);
+  pinMode(servoRight1, OUTPUT);
+  pinMode(servoRight2, OUTPUT);
 
 
 }
 void loop() {
   servoGo = digitalRead(servoControll);
+  ledOn = digitalRead(controllPin);
   updateLed();
   if (servoGo) {
     dig();
