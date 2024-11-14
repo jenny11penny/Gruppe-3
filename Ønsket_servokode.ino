@@ -1,3 +1,5 @@
+//Dette er koden vi ville brukt om vi hadde hatt servo-motorene
+
 // Definerer pin-nummer for servoer og kontrollpinnene
 const int servoControll = 14;  
 const int servoLeft1 = 32;     
