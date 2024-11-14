@@ -1,64 +1,73 @@
+// Definerer pin-nummer for tilkoblinger
+const int servoControll = 14;  // Pinne 14 styrer servomotoren (kontroll for graving)
+const int servoLeft1 = 32;     // Pinne 32 styrer venstre servo (del 1)
+const int servoLeft2 = 33;     // Pinne 33 styrer venstre servo 2 (del 2)
+const int servoRight1 = 25;    // Pinne 25 styrer høyre servo 1
+const int servoRight2 = 26;    // Pinne 26 styrer høyre servo 2
+const int ledPin = 17;         // Pinne 17 styrer LED-lampen
+const int controllPin = 4;     // Pinne 4 brukes som kontroll for å styre LED-en
 
-//pins
-const int servoControll = 14;
-const int servoLeft1 = 32;
-const int servoLeft2 = 33;
-const int servoRight1 = 25;
-const int servoRight2 = 26;
-const int ledPin = 17;
-const int controllPin = 4;
+// Variabler
+int ledOn = 0;         // Variabel som holder styr på LED-status (0 = av, 1 = på)
+int servoGo = 0;       // Variabel som holder styr på om servomotorene skal aktiveres (0 = av, 1 = på)
+int servoReady = 1;    // Variabel som indikerer om servomotorene er klare til å kjøre (1 = klar, 0 = ikke klar)
 
-//bools
-int ledOn = 0;
-int servoGo = 0;
-int servoReady = 1;
+// Funksjon for å aktivere servomotorene (graving)
 void dig() {
-  if (servoReady) {
-    //dig
-    Serial.println("DIG!DIG!DIG!");
-    servoReady = 0;
-    digitalWrite(servoLeft1, HIGH);
-    digitalWrite(servoLeft2, HIGH);
-    delay(5000);
-    digitalWrite(servoLeft1, LOW);
-    digitalWrite(servoLeft2, LOW);
-    delay(1000);
-    digitalWrite(servoRight1, HIGH);
-    digitalWrite(servoRight2, HIGH);
-    delay(5000);
-    digitalWrite(servoRight1, LOW);
-    digitalWrite(servoRight2, LOW);
-    delay(1000);
-    servoReady = 1;
+  if (servoReady) {  // Sjekker om servomotorene er klare til å starte
+    Serial.println("DIG!DIG!DIG!");  // Skriver ut en melding i Serial Monitor
+    servoReady = 0;  // Setter servoReady til 0 for å hindre at det skjer igjen umiddelbart
+
+    // Aktivere venstre servomotorer (i 5 sekunder)
+    digitalWrite(servoLeft1, HIGH);  // Slår på venstre servo (del 1)
+    digitalWrite(servoLeft2, HIGH);  // Slår på venstre servo (del 2)
+    delay(5000);  // Venter i 5 sekunder
+    digitalWrite(servoLeft1, LOW);   // Slår av venstre servo (del 1)
+    digitalWrite(servoLeft2, LOW);   // Slår av venstre servo (del 2)
+    delay(1000);  // Venter i 1 sekund før neste handling
+
+    // Aktivere høyre servomotorer (i 5 sekunder)
+    digitalWrite(servoRight1, HIGH);  // Slår på høyre servo (del 1)
+    digitalWrite(servoRight2, HIGH);  // Slår på høyre servo (del 2)
+    delay(5000);  // Venter i 5 sekunder
+    digitalWrite(servoRight1, LOW);   // Slår av høyre servo (del 1)
+    digitalWrite(servoRight2, LOW);   // Slår av høyre servo (del 2)
+    delay(1000);  // Venter i 1 sekund
+
+    servoReady = 1;  // Setter servoReady tilbake til 1 for å indikerw at servomotorene er klare for neste runde
   }
 }
-//updateled
+
+// Funksjon for å oppdatere LED-lampen
 void updateLed() {
-  if (ledOn) {
-    digitalWrite(ledPin,HIGH);
-    Serial.println("Led is on");
+  if (ledOn) {  // Hvis ledOn er 1 (LED-en skal være på)
+    digitalWrite(ledPin, HIGH);  // Tennes LED-lampen
+    Serial.println("Led is on");  // Skriver ut en melding i Serial Monitor
   }
-  else {
-    digitalWrite(ledPin,LOW);
-    Serial.println("Led is off");
-  }}
-void setup() {
-  Serial.begin(115200);
-  pinMode(ledPin,OUTPUT);
-  pinMode(controllPin, INPUT_PULLDOWN);
-  pinMode(servoControll, INPUT_PULLDOWN);
-  pinMode(servoLeft1, OUTPUT);
-  pinMode(servoLeft2, OUTPUT);
-  pinMode(servoRight1, OUTPUT);
-  pinMode(servoRight2, OUTPUT);
-
-
+  else {  // Hvis ledOn er 0 (LED-en skal være av)
+    digitalWrite(ledPin, LOW);   // Slukkes LED-lampen
+    Serial.println("Led is off");  // Skriver ut en melding i Serial Monitor
+  }
 }
+
+void setup() {
+  Serial.begin(115200);  // Starter seriell kommunikasjon med baudrate 115200
+  pinMode(ledPin, OUTPUT);  // Setter ledPin som utgang
+  pinMode(controllPin, INPUT_PULLDOWN);  // Setter controllPin som inngang med intern pull-down motstand
+  pinMode(servoControll, INPUT_PULLDOWN);  // Setter servoControll som inngang med intern pull-down motstand
+  pinMode(servoLeft1, OUTPUT);  // Setter servoLeft1 som utgang
+  pinMode(servoLeft2, OUTPUT);  // Setter servoLeft2 som utgang
+  pinMode(servoRight1, OUTPUT);  // Setter servoRight1 som utgang
+  pinMode(servoRight2, OUTPUT);  // Setter servoRight2 som utgang
+}
+
 void loop() {
-  servoGo = digitalRead(servoControll);
-  ledOn = digitalRead(controllPin);
-  updateLed();
-  if (servoGo) {
-    dig();
+  servoGo = digitalRead(servoControll);  // Leser verdien på servoControll-pinnen (aktivert eller ikke)
+  ledOn = digitalRead(controllPin);      // Leser verdien på controllPin-pinnen (LED-en skal være på eller av)
+
+  updateLed();  // Kaller funksjonen for å oppdatere LED-lampen basert på ledOn
+  
+  if (servoGo) {  // Hvis servoGo er aktivert (servoControll-pinnen har høy verdi)
+    dig();  // Kaller funksjonen for å aktivere servoene og utføre gravingen
   }
 }
