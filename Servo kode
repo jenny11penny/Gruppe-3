@@ -1,0 +1,47 @@
+#include <ESP32Servo.h>
+Servo servo1ovre;
+Servo servo1nedre;
+Servo servo2ovre;
+Servo servo2nedre;
+const int buttonPin = 15;     // Pin for knappen
+const int servoPin1 = 13;     // Pin for servo 1 øvre
+const int servoPin2 = 12;     // Pin for servo 1 nedre
+const int servoPin3 = 14;     // Pin for servo 2 øvre
+const int servoPin4 = 27;     // Pin for servo 2 nedre
+bool buttonState = 0;
+bool lastButtonState = 0;
+void setup() {
+  Serial.begin(115200);
+  // Initialiser knapp
+  pinMode(buttonPin, INPUT_PULLUP);
+  // Koble servomotorer til spesifikke pinner
+  servo1ovre.attach(servoPin1);
+  servo1nedre.attach(servoPin2);
+  servo2ovre.attach(servoPin3);
+  servo2nedre.attach(servoPin4);
+  // Startposisjon for servoene
+  servo1ovre.write(150);
+  servo1nedre.write(150);
+  servo2ovre.write(30);
+  servo2nedre.write(30);
+}
+void loop() {
+  buttonState = digitalRead(buttonPin);
+  if (buttonState != lastButtonState) {
+    if (buttonState == LOW) { // Når knappen trykkes inn
+      // Beveg servoene til ønsket posisjon
+      servo1ovre.write(100);
+      servo1nedre.write(100);
+      servo2ovre.write(80);
+      servo2nedre.write(80);
+      delay(1000);       // Hold posisjonen i 1 sekund
+      // Tilbake til startposisjon
+      servo10vre.write(150);
+      servo1nedre.write(150);
+      servo20vre.write(30);
+      servo2nedre.write(30);
+    }
+    delay(50);  // Debounce for å unngå flere signaler
+  }
+  lastButtonState = buttonState;
+}
