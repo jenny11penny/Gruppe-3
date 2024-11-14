@@ -3,7 +3,6 @@ const int servoLeft1 = 32;
 const int servoLeft2 = 33;
 const int servoRight1 = 25;
 const int servoRight2 = 26;
-const int ledPin = 17;
 const int controllPin = 4;
 
 //bools
